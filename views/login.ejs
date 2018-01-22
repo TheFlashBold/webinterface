@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="mainModule">
+<%- include('head', {title: 'Webinterface', file:'login'}); %>
+<body ng-controller="loginController" ng-init="">
+<div class="ng-cloak col-md-8 col-md-offset-2">
+    <fieldset>
+        <legend>Login</legend>
+		<p ng-if="error" class="alert-danger">{{error}}</p>
+        <div class="form-group">
+            <label for="usernameField">Username</label>
+            <input type="text" class="form-control" id="usernameField" ng-model="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+            <label for="passwordField">Password</label>
+            <input type="password" ng-keydown="$event.keyCode === 13 && Login()" class="form-control" id="passwordField" ng-model="password" placeholder="Password">
+        </div>
+        <button ng-click="Login()" class="btn btn-sm btn-primary m-r-5">Login</button>
+    </fieldset>
+</div>
+</body>
+</html>

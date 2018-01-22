@@ -1,0 +1,25 @@
+<div id="header" class="header navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="/" class="navbar-brand"></span>Webinterface</a>
+        </div>
+        <% if(locals.user) { %>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown navbar-user">
+                <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+                    <span class="user-image online">
+                        <img src="" alt="">
+                    </span>
+                    <span class="hidden-xs"><%= user.username %></span> <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu animated">
+                    <li class="arrow"></li>
+                    <li><a href="/">Server</a></li>
+                    <li class="divider"></li>
+                    <li><a ng-click="Logout()" href="javascript:;">Log Out</a></li>
+                </ul>
+            </li>
+        </ul>
+        <% } %>
+    </div>
+</div>

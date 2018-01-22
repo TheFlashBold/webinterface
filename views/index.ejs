@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="mainModule">
+<%- include('head', {title: 'Webinterface', file:"index"}); %>
+<body ng-controller="<%= file %>Controller" ng-init="loadData(<%= JSON.stringify(data) %>)">
+<%- include('navbar', {}) %>
+<div class="content ng-cloak col-md-8 col-md-offset-2">
+    <div ng-if="checkRights(user, 'admin.server.create')" class="panel panel-default">
+        <div class="panel-heading">
+            Create new server
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <div class="input-group col-md-12">
+                    <span class="input-group-addon" id="basic-addon1">Game</span>
+                    <select class="form-control" ng-model="server_game">
+                        <option value="">Game</option>
+                        <option ng-repeat="game in data.games track by $index" ng-value="{{game}}">{{game.name}}
+                        </option>
+                    </select>
+                </div>
+                <p></p>
+                <div class="input-group col-md-12" ng-show="server_game">
+                    <span class="input-group-addon" id="basic-addon1">Version</span>
+                    <select class="form-control" ng-model="server_version">
+                        <option value="">Version</option>
+                        <option ng-repeat="version in server_game.versions" value="{{version}}">{{version}}</option>
+                    </select>
+                </div>
+                <p></p>
+                <div class="input-group col-md-12" ng-show="server_version">
+                    <span class="input-group-addon" id="basic-addon1">Server Id</span>
+                    <input type="text" class="form-control" ng-model="server_id" ng-change="checkId(server_id)">
+                </div>
+                <p ng-show="!server_valid && server_id.length > 3" style="color: red">Id is already taken</p>
+                <p></p>
+                <p ng-show="server_id && server_valid && server_id.length > 3">
+                    <button type="button" class="btn btn-default" ng-click="setup(server_game.name, server_version, server_id)"><i class="fa fa-plus"></i> setup
+                    </button>
+                </p>
+                <div ng-show="server_done" class="alert alert-success" role="alert">Server {{server_id}} created!</div>
+                <div ng-show="server_error" class="alert alert-danger" role="alert">{{server_error}}</div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Servers
+        </div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <div ng-repeat="server in data.server"><a href="/server/{{server._id}}">
+                        <legend>{{server.label}}</legend>
+                    </a>
+                    <p>Game: {{server.type}} Version: {{server.version}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

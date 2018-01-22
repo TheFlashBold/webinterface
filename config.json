@@ -1,0 +1,13 @@
+{
+  "www": {
+    "port": 3000
+  },
+  "mongodb": "mongodb://localhost/webinterface",
+  "rewrites": {
+    "index": "/"
+  },
+  "noLogin": [
+    "/login",
+    "/api/login"
+  ]
+}

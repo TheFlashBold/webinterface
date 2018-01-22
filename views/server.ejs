@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="mainModule">
+<%- include('head', {title: 'Webinterface', file:'server'}); %>
+<body ng-controller="serverController" ng-init="loadData(<%= JSON.stringify(data) %>)">
+<%- include('navbar', {}) %>
+<div class="content ng-cloak col-md-8 col-md-offset-2">
+    <h2>{{data.server.label}}</h2>
+    <div ng-if="checkRights(user, 'user.config.files')" class="panel panel-default">
+        <div class="panel-heading">
+            Config Files
+        </div>
+        <div class="panel-body">
+            <ul class="list-group col-md-12 pre-scrollable" style="max-height: 300px">
+                <li class="list-group-item" ng-repeat="(file, c) in data.configFiles">
+                    <a href="{{'/server/' + data.id + '/edit/' + file.replace('.', '_')}}">{{file.replace("_", ".")}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Control
+        </div>
+        <div class="panel-body">
+            <button ng-if="checkRights(user, 'user.server.start')" type="button" class="btn btn-default" ng-class="{'disabled':isStart()}" ng-click="start()"><i class="fa fa-play"></i> start</button>
+            <button ng-if="checkRights(user, 'user.server.stop')" type="button" class="btn btn-default" ng-class="{'disabled':isStop()}" ng-click="stop()"><i class="fa fa-stop"></i> stop</button>
+            <button ng-if="checkRights(user, 'user.config.edit')" type="button" class="btn btn-default" ng-click="open('/server/' + data.id + '/edit/vars')"><i class="fa fa-pencil"></i> edit vars</button>
+            <span class="label" ng-if="data.state" ng-class="{'label-success':isStart(),'label-danger':isStop()}" style="padding: 10px;">{{data.state}}</span>
+            <i ng-if="!data.state" class="fa fa-spinner fa-pulse fa-1x fa-fw"></i>
+            <button ng-if="checkRights(user, 'user.custom.' + b.right)" ng-repeat="b in data.buttons" type="button" class="btn btn-default" ng-click="sendCommand(b.command)" title="{{b.label}}"><i class="fa fa-{{b.icon}}"></i></button>
+        </div>
+    </div>
+    <div ng-if="checkRights(user, 'user.server.log')" class="panel panel-default">
+        <div class="panel-heading">
+            Log
+        </div>
+        <div class="panel-body">
+			<pre style="height: 300px;overflow-y: scroll;" ng-bind-html="log">
+			</pre>
+            <input ng-if="checkRights(user, 'user.server.command')" type="text" class="form-control" id="commandinput" aria-describedby="basic-addon3" ng-model="commandinput" ng-keydown="HandleKeypress($event)">
+        </div>
+    </div>    
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Mods
+        </div>
+        <div class="panel-body">
+            <ul class="list-group col-md-12 pre-scrollable" style="max-height: 300px">
+                <li class="list-group-item" ng-repeat="mod in data.mods track by $index">
+                    <a href="#">{{mod.label}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="mainModule">
+<%- include('head', {title: 'Webinterface', file:'editfile'}); %>
+<body ng-controller="editfileController" ng-init="loadData(<%= JSON.stringify(data) %>, <%= JSON.stringify({
+    id: id,
+    file: file
+}) %>)">
+<%- include('navbar', {}) %>
+<div class="content ng-cloak col-md-8 col-md-offset-2">
+    <div class="panel panel-default">
+        <div class="panel-heading"><a href="{{'/server/' + config.id}}"><i
+                        class="fa fa-arrow-left"></i></a> <%= file.replace("_", ".") %>
+            <a href="#" ng-click="save()" class="pull-right"><i class="fa fa-save"></i></a></div>
+        <div class="panel-body">
+            <table class="table table-bordered table-reponsive">
+                <tr ng-repeat="setting in settings track by $index">
+                    <td>
+                        <span>{{setting.name}}</span>
+                    </td>
+                    <td ng-if="setting.type === 'String'">
+                        <input type="text" placeholder="{{setting.default}}" style="width: 100%"
+                               ng-init="setting.value = setting.value || setting.default" ng-model="setting.value">
+                    </td>
+                    <td ng-if="setting.type === 'Boolean'">
+                        <input type="checkbox"
+                               ng-init="setting.value = setting.value !== ''?setting.value:setting.default"
+                               style="width: 100%" ng-model="setting.value">
+                    </td>
+                    <td ng-if="setting.type === 'Number'">
+                        <input type="number" min="{{setting.min}}" max="{{setting.max}}" style="width: 100%"
+                               ng-init="setting.value = setting.value || setting.default" ng-model="setting.value">
+                    </td>
+                    <td ng-if="setting.type === 'Multi'">
+                        <select ng-init="setting.value = setting.value || setting.default" ng-model="setting.value"
+                                style="width: 100%">
+                            <option ng-repeat="val in setting.values" value="{{val}}">{{val}}</option>
+                        </select>
+                    </td>
+                    <td ng-if="setting.type === 'JSON-Array'">
+                        <div ng-repeat="entry in setting.value track by $index" class="well">
+                            <div ng-repeat="(key, value) in entry track by $index" class="input-group">
+                                <span ng-if="setting.fields[key].type !== 'Boolean'" class="input-group-addon">{{key}}</span>
+                                <div ng-if="setting.fields[key].type === 'Boolean'" class="checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="entry[key]" value="">
+                                        {{key}}
+                                    </label>
+                                </div>
+                                <input ng-if="setting.fields[key].type === 'String'" class="form-control" ng-model="entry[key]" type="text">
+                                <input ng-if="setting.fields[key].type === 'Number'" class="form-control" ng-model="entry[key]" type="number">
+
+                            </div>
+                            <button type="button" ng-click="setting.value.splice($index, 1)" class="btn m-r-5 m-b-5">
+                                <i class="fa fa-trash"></i></button>
+                        </div>
+                        <button type="button" ng-click="addVal(setting.value, setting.fields)" class="btn m-r-5 m-b-5">
+                            <i class="fa fa-plus"></i></button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
